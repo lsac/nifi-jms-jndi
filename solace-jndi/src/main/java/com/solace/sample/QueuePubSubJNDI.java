@@ -41,7 +41,7 @@ public class QueuePubSubJNDI {
 
     public void run(String... args) throws Exception {
 
-        System.out.println("QueueProducer initializing...");
+        System.out.println("QueuePubSubJNDI initializing...");
 
         // The client needs to specify all of the following properties:
         Properties env = new Properties();
@@ -129,7 +129,7 @@ public class QueuePubSubJNDI {
 
         // Check command line arguments
         if (args.length < 1) {
-            System.out.println("Usage: QueueProducer <msg_backbone_ip:port>");
+            System.out.println("Usage: QueuePubSubJNDI <msg_backbone_ip:port>");
             System.exit(-1);
         }
 
