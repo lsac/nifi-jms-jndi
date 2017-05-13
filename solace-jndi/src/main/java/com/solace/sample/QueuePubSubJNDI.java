@@ -92,8 +92,9 @@ public class QueuePubSubJNDI {
                         System.out.println("Message received.");
                     }
                     System.out.printf("Message Dump:%n%s%n", SolJmsUtility.dumpMessage(message));
-                    long x = message.getJMSTimestamp();
-                    System.out.printf("appID = %d, latency = %d ms %n", message.getLongProperty("appID"), (System.currentTimeMillis() - x));
+                    
+                    long tmStart = message.getLongProperty("OriginationTime");
+                    System.out.printf("appID = %d, latency = %d ms %n", message.getLongProperty("appID"), (System.currentTimeMillis() - tmStart));
 
                 } catch (JMSException e) {
                     System.out.println("Error processing incoming message.");
@@ -119,9 +120,11 @@ public class QueuePubSubJNDI {
                 qPub.toString());
 
         for (int i = 1; i <= count; i++) {
+            long t = System.currentTimeMillis();
             message.setLongProperty("appID", i);
+            message.setLongProperty("OriginationTime", t);
             producer.send(qPub, message, DeliveryMode.PERSISTENT, Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
-            System.out.printf("Message %d is sent at %d %n" , i, System.currentTimeMillis());
+            System.out.printf("Message %d is sent at %d %n" , i, t);
             try {
                 Thread.sleep(100);
             } catch (Exception ex) {
