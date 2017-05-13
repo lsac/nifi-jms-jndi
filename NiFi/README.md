@@ -2,9 +2,10 @@
 
 NiFi keeps all the GUI widget configurations in a file '~/nifi-1.1.2/conf/flow.xml.gz/flow.xml'. NiFi's 2 built-in JMS processors are bundled together and can share the same JMS connection factory provider.
 
+## Provider Sharing View
 ![Provider Sharing](/resources/providerSetting.png)
 
-The JNDI connection factory properties is configured as:
+## The JNDI connection factory properties is configured as:
 
 ![Provider properties](/resources/providerProp.png)
 
