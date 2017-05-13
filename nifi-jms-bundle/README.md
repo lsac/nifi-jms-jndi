@@ -4,20 +4,22 @@ The NiFi 'nifi-jms-bundle' has 2 built-in processors, 'ConsumeJMS' and 'PublishJ
 
 The project is based on 'nifi-jms-bundle' from NiFi tag 'rel/1.1.2'. 'nifi-jms-bundle' has 2 sub projects, 'nifi-jms-cf-service' and 'nifi-jms-processors'. 'nifi-jms-cf-service' is referenced by 'nifi-jms-processors'.
 
+## Modifications and Changes
 Changes are made as following:
 
 1. New code
   
-  * nifi-jms-cf-service\src\main\java\org\apache\nifi\jms\cf\JNDIConnectionFactoryProviderDefinition.java
-  * nifi-jms-cf-service\src\main\java\org\apache\nifi\jms\cf\JNDIConnectionFactoryProvider.java
-  * nifi-jms-cf-service\src\test\java\org\apache\nifi\jms\cf\JNDIConnectionFactoryProviderTest.java
+    * nifi-jms-cf-service\src\main\java\org\apache\nifi\jms\cf\JNDIConnectionFactoryProviderDefinition.java
+    * nifi-jms-cf-service\src\main\java\org\apache\nifi\jms\cf\JNDIConnectionFactoryProvider.java
+    * nifi-jms-cf-service\src\test\java\org\apache\nifi\jms\cf\JNDIConnectionFactoryProviderTest.java
 
 2. Modified code
 
-  * nifi-jms-cf-service\src\main\resources\META-INF\services\org.apache.nifi.controller.ControllerService
+    * nifi-jms-cf-service\src\main\resources\META-INF\services\org.apache.nifi.controller.ControllerService
   
-  Build procedures:
-  ```
+## Build procedures
+The maven build script is executed from 'nifi-jms-bundle' directory as following:
+```
  $ mvn clean test nifi-nar:nar
 [INFO] Scanning for projects...
 [INFO] Inspecting build with total of 5 modules...
@@ -55,10 +57,12 @@ Changes are made as following:
 [INFO] ------------------------------------------------------------------------
 Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=256m; support was removed in 8.0
 ```
+## Code Deployment
 After build script is finished, copy 2 new NAR files to ~/nifi-1.1.2/lib
   * nifi-jms-bundle/nifi-jms-cf-service-nar/target/nifi-jms-cf-service-nar-1.1.2.nar
   * nifi-jms-bundle/nifi-jms-processors-nar/target/nifi-jms-processors-nar-1.1.2.nar
 
+## NiFi Restart
 Upon restart, NiFi shall detect 2 new NARs and reload them.
 ```
 2017-05-12 22:00:20,282 INFO [main] org.apache.nifi.NiFi Loaded 121 properties
@@ -67,5 +71,5 @@ Upon restart, NiFi shall detect 2 new NARs and reload them.
 2017-05-12 22:00:22,664 INFO [main] org.apache.nifi.nar.NarUnpacker Contents of nar c:\proj\NIFI-1~1.2\.\lib\nifi-jms-cf-service-nar-1.1.2.nar have changed. Reloading.
 2017-05-12 22:00:22,870 INFO [main] org.apache.nifi.nar.NarUnpacker Contents of nar c:\proj\NIFI-1~1.2\.\lib\nifi-jms-processors-nar-1.1.2.nar have changed. Reloading.
 ```
-
-Up to this point, the latest JNDI connection provider is available in NiFi. By setting up properties, the JNDI connection factory provider can work with broader set of JMS brokers, i.e. Solace, ActiveMQ and etc.
+## NiFi Config
+Up to this point, the latest JNDI connection provider is available in NiFi. By setting up JMS broker specific properties, the JNDI connection factory provider can work with broader set of JMS brokers, i.e. Solace, ActiveMQ and etc.
