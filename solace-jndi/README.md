@@ -28,7 +28,7 @@ BUILD SUCCESSFUL
 Total time: 7.72 secs
 ```
 
-A custom task is added build.gradle. The **args** points Solace router msg_backbone_ip:port. 
+A custom task is added to 'build.gradle'. The **args** must point Solace router msg_backbone_ip:port. 
 ```groovy
 task(runQueuePubSubJNDI, dependsOn: 'classes', type: JavaExec) {
     main = 'com.solace.sample.QueuePubSubJNDI'
