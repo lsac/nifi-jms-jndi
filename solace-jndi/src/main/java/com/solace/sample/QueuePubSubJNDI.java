@@ -40,6 +40,7 @@ import javax.jms.MessageListener;
 public class QueuePubSubJNDI {
 
     public void run(String... args) throws Exception {
+        int count = 10;
 
         System.out.println("QueuePubSubJNDI initializing...");
 
@@ -47,6 +48,14 @@ public class QueuePubSubJNDI {
         Properties env = new Properties();
         env.put(InitialContext.INITIAL_CONTEXT_FACTORY, "com.solacesystems.jndi.SolJNDIInitialContextFactory");
         env.put(InitialContext.PROVIDER_URL, (String) args[0]);
+        try {
+            int i = 0;
+            if (args.length > 1)
+                 i = Integer.parseInt(args[1]);
+            if (i> 0)
+                count = i;
+            
+        } catch(Exception e) {}
         env.put(SupportedProperty.SOLACE_JMS_VPN, "default");
         env.put(Context.SECURITY_PRINCIPAL, "default");
         env.put(Context.SECURITY_CREDENTIALS, "");
@@ -84,7 +93,7 @@ public class QueuePubSubJNDI {
                     }
                     System.out.printf("Message Dump:%n%s%n", SolJmsUtility.dumpMessage(message));
                     long x = message.getJMSTimestamp();
-                    System.out.printf("appID = %d, latency = %d ms \n", message.getLongProperty("appID"), (System.currentTimeMillis() - x));
+                    System.out.printf("appID = %d, latency = %d ms %n", message.getLongProperty("appID"), (System.currentTimeMillis() - x));
 
                 } catch (JMSException e) {
                     System.out.println("Error processing incoming message.");
@@ -109,10 +118,10 @@ public class QueuePubSubJNDI {
         System.out.printf("Connected. About to send message '%s' to queue '%s'...%n", message.getText(),
                 qPub.toString());
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 1; i <= count; i++) {
             message.setLongProperty("appID", i);
             producer.send(qPub, message, DeliveryMode.PERSISTENT, Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
-            System.out.println("SENT: " + i);
+            System.out.printf("Message %d is sent at %d %n" , i, System.currentTimeMillis());
             try {
                 Thread.sleep(100);
             } catch (Exception ex) {
@@ -129,7 +138,7 @@ public class QueuePubSubJNDI {
 
         // Check command line arguments
         if (args.length < 1) {
-            System.out.println("Usage: QueuePubSubJNDI <msg_backbone_ip:port>");
+            System.out.println("Usage: QueuePubSubJNDI <msg_backbone_ip:port> [message count]");
             System.exit(-1);
         }
 
