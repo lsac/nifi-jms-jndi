@@ -39,6 +39,8 @@ import javax.jms.MessageListener;
 
 public class QueuePubSubJNDI {
 
+    private static final String ORIGINATION_TIME = "OriginationTime";
+
     public void run(String... args) throws Exception {
         int count = 10;
 
@@ -50,12 +52,15 @@ public class QueuePubSubJNDI {
         env.put(InitialContext.PROVIDER_URL, (String) args[0]);
         try {
             int i = 0;
-            if (args.length > 1)
-                 i = Integer.parseInt(args[1]);
-            if (i> 0)
+            if (args.length > 1) {
+                i = Integer.parseInt(args[1]);
+            }
+            if (i > 0) {
                 count = i;
-            
-        } catch(Exception e) {}
+            }
+
+        } catch (Exception e) {
+        }
         env.put(SupportedProperty.SOLACE_JMS_VPN, "default");
         env.put(Context.SECURITY_PRINCIPAL, "default");
         env.put(Context.SECURITY_CREDENTIALS, "");
@@ -92,8 +97,8 @@ public class QueuePubSubJNDI {
                         System.out.println("Message received.");
                     }
                     System.out.printf("Message Dump:%n%s%n", SolJmsUtility.dumpMessage(message));
-                    
-                    long tmStart = message.getLongProperty("OriginationTime");
+
+                    long tmStart = message.getLongProperty(ORIGINATION_TIME);
                     System.out.printf("appID = %d, latency = %d ms %n", message.getLongProperty("appID"), (System.currentTimeMillis() - tmStart));
 
                 } catch (JMSException e) {
@@ -102,6 +107,7 @@ public class QueuePubSubJNDI {
                 }
 
             }
+
         });
         // Do not forget to start the JMS Connection.
         connection.start();
@@ -122,9 +128,9 @@ public class QueuePubSubJNDI {
         for (int i = 1; i <= count; i++) {
             long t = System.currentTimeMillis();
             message.setLongProperty("appID", i);
-            message.setLongProperty("OriginationTime", t);
+            message.setLongProperty(ORIGINATION_TIME, t);
             producer.send(qPub, message, DeliveryMode.PERSISTENT, Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
-            System.out.printf("Message %d is sent at %d %n" , i, t);
+            System.out.printf("Message %d is sent at %d %n", i, t);
             try {
                 Thread.sleep(100);
             } catch (Exception ex) {
