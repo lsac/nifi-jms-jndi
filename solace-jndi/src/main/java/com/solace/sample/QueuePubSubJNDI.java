@@ -137,8 +137,11 @@ public class QueuePubSubJNDI {
             }
         }
 
-        System.out.println("Message sent. Exiting.");
-
+        System.out.println("Messages sent. Exiting.");
+        try {
+            Thread.sleep(1000);
+        } catch (Exception ex) {
+        }
         connection.close();
         initialContext.close();
     }
