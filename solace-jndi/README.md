@@ -2,7 +2,7 @@
 
 The Solace JMS API supports JMS version 1.1. The JMS API at [Solace Dev Portal](http://dev.solace.com/tech/jms-api/) has a series of tutorials and articles to help developers to learn.
 
-This sample project is a conslidated version of 2 samples at [Obtaining JMS objects using JNDI](http://dev.solace.com/get-started/jms-tutorials/obtaining-jms-objects-using-jndi/). The project publishes persistent messages to queue "toNifi" and receives from queue "fromNifi". Readers are encouraged to write additional code to receive from topic "T/fromNifi".
+This sample project is a conslidated version of 2 samples in [Obtaining JMS objects using JNDI](http://dev.solace.com/get-started/jms-tutorials/obtaining-jms-objects-using-jndi/). The project publishes persistent messages to queue "toNifi" and receives from queue "fromNifi". Readers are encouraged to write additional code to receive from topic "T/fromNifi".
 
 Gradle is used to build the project.
 ```
