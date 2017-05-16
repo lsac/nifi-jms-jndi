@@ -36,11 +36,12 @@ public interface JMSConnectionFactoryProviderDefinition extends ControllerServic
     static final String BROKER = "broker";
     static final String CF_IMPL = "cf";
     static final String CF_LIB = "cflib";
+    static final String JNDI__CF_NAME = "cfname";
 
     public static final PropertyDescriptor CONNECTION_FACTORY_IMPL = new PropertyDescriptor.Builder()
             .name(CF_IMPL)
             .displayName("MQ ConnectionFactory Implementation")
-            .description("A fully qualified name of the JMS ConnectionFactory implementation "
+            .description("A fully qualified name of the JMS or JNDI ConnectionFactory implementation "
                        + "class (i.e., org.apache.activemq.ActiveMQConnectionFactory)")
             .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
             .required(true)
@@ -62,7 +63,7 @@ public interface JMSConnectionFactoryProviderDefinition extends ControllerServic
             .name(BROKER)
             .displayName("Broker URI")
             .description("URI pointing to the network location of the JMS Message broker. For example, "
-                      + "'tcp://myhost:61616' for ActiveMQ or 'myhost:1414' for IBM MQ")
+                      + "'tcp://myhost:61616' for ActiveMQ or 'myhost:1414' for IBM MQ or 'myhost' for Solace")
             .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
             .required(true)
             .expressionLanguageSupported(true)
@@ -74,6 +75,31 @@ public interface JMSConnectionFactoryProviderDefinition extends ControllerServic
             .required(false)
             .identifiesControllerService(SSLContextService.class)
             .build();
+    static final PropertyDescriptor JNDI_CF_LOOKUP = new PropertyDescriptor.Builder()
+            .name(JNDI__CF_NAME)
+            .displayName("Connection Factory Lookup Name")
+            .description("Look up the connection factory object in the JNDI object store.")
+            .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+            .required(true)
+            .expressionLanguageSupported(false)
+            .build();
+    
+    static final PropertyDescriptor JNDI_USER = new PropertyDescriptor.Builder()
+            .name("User Name")
+            .description("User Name used for authentication and authorization. (i.e., clientname@solaceVpn)")
+            .required(false)
+            .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+            .build();
+    
+    static final PropertyDescriptor JNDI_PASSWORD = new PropertyDescriptor.Builder()
+            .name("Password")
+            .description("Password used for authentication and authorization.")
+            .required(false)
+            .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+            .sensitive(true)
+            .build();
+    
+ 
 
     /**
      * Returns an instance of the {@link ConnectionFactory} specific to the

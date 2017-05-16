@@ -56,7 +56,7 @@ public class JNDIConnectionFactoryProviderTest {
         //when(cfProvider.getConnectionFactory()).thenReturn(mcf);
         runner.addControllerService("cfProvider", cfProvider);
         runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.BROKER_URI, "vm://localhost?broker.persistent=false");
-        runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CF_LOOKUP, "ConnectionFactory");
+        runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.JNDI_CF_LOOKUP, "ConnectionFactory");
 
         runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CLIENT_LIB_DIR_PATH,
                 TestUtils.setupActiveMqLibForTesting(false)); // see README in 'test-lib' dir for more info
@@ -76,7 +76,7 @@ public class JNDIConnectionFactoryProviderTest {
         JNDIConnectionFactoryProvider cfProvider = new JNDIConnectionFactoryProvider();
         runner.addControllerService("cfProvider", cfProvider);
         runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.BROKER_URI, "myhost:1234");
-        runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CF_LOOKUP, "ConnectonFactory");
+        runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.JNDI_CF_LOOKUP, "ConnectonFactory");
 
         runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CLIENT_LIB_DIR_PATH, "test-lib");
         runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CONNECTION_FACTORY_IMPL,
@@ -90,7 +90,7 @@ public class JNDIConnectionFactoryProviderTest {
         JNDIConnectionFactoryProvider cfProvider = new JNDIConnectionFactoryProvider();
         runner.addControllerService("cfProvider", cfProvider);
         runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.BROKER_URI, "myhost:1234");
-        runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CF_LOOKUP, "ConnectonFactory");
+        runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.JNDI_CF_LOOKUP, "ConnectonFactory");
 
         runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CLIENT_LIB_DIR_PATH, "foo");
         runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CONNECTION_FACTORY_IMPL,
@@ -104,7 +104,7 @@ public class JNDIConnectionFactoryProviderTest {
         JNDIConnectionFactoryProvider cfProvider = new JNDIConnectionFactoryProvider();
         runner.addControllerService("cfProvider", cfProvider);
         runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.BROKER_URI, "myhost:1234");
-        runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CF_LOOKUP, "ConnectonFactory");
+        runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.JNDI_CF_LOOKUP, "ConnectonFactory");
 
         runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CLIENT_LIB_DIR_PATH, "test-lib");
         runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CONNECTION_FACTORY_IMPL,
@@ -119,7 +119,7 @@ public class JNDIConnectionFactoryProviderTest {
         JNDIConnectionFactoryProvider cfProvider = new JNDIConnectionFactoryProvider();
         runner.addControllerService("cfProvider", cfProvider);
         runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.BROKER_URI, "myhost:1234");
-        runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CF_LOOKUP, "ConnectonFactory");
+        runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.JNDI_CF_LOOKUP, "ConnectonFactory");
 
         runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CLIENT_LIB_DIR_PATH, "pom.xml");
         runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CONNECTION_FACTORY_IMPL,
@@ -149,7 +149,7 @@ public class JNDIConnectionFactoryProviderTest {
             runner.addControllerService("cfProvider", cfProvider);
             runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.BROKER_URI,
                     "vm://localhost?broker.persistent=false");
-            runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CF_LOOKUP, "ConnectionFactory");
+            runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.JNDI_CF_LOOKUP, "ConnectionFactory");
             runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CLIENT_LIB_DIR_PATH, libPath);
             runner.setProperty(cfProvider, JNDIConnectionFactoryProvider.CONNECTION_FACTORY_IMPL,
                     "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
@@ -181,7 +181,7 @@ public class JNDIConnectionFactoryProviderTest {
         boolean present = false;
         while (iter.hasNext()) {
             ControllerService cs = iter.next();
-            if (cs instanceof JNDIConnectionFactoryProviderDefinition) {
+            if (cs instanceof JMSConnectionFactoryProviderDefinition) {
                 present = true;
                 break;
             }

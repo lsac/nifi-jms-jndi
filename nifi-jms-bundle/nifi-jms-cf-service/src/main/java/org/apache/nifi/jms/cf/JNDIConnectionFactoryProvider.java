@@ -19,7 +19,6 @@ package org.apache.nifi.jms.cf;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -27,7 +26,6 @@ import java.util.Properties;
 import javax.jms.ConnectionFactory;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.net.ssl.SSLContext;
 
 import org.apache.nifi.annotation.behavior.DynamicProperty;
@@ -65,14 +63,14 @@ import org.slf4j.LoggerFactory;
         + "specific ConnectionFactory's implementation. For example, 'com.ibm.mq.jms.MQConnectionFactory.setChannel(String)' would imply 'channel' "
         + "property and 'com.ibm.mq.jms.MQConnectionFactory.setTransportType(int)' would imply 'transportType' property.")
 @SeeAlso(classNames = {"org.apache.nifi.jms.processors.ConsumeJMS", "org.apache.nifi.jms.processors.PublishJMS"})
-public class JNDIConnectionFactoryProvider extends AbstractControllerService implements JNDIConnectionFactoryProviderDefinition {
+public class JNDIConnectionFactoryProvider extends AbstractControllerService implements JMSConnectionFactoryProviderDefinition {
 
     private final Logger logger = LoggerFactory.getLogger(JNDIConnectionFactoryProvider.class);
 
     private static final List<PropertyDescriptor> propertyDescriptors;
 
     static {
-        propertyDescriptors = Collections.unmodifiableList(Arrays.asList(CONNECTION_FACTORY_IMPL, CLIENT_LIB_DIR_PATH, BROKER_URI, CF_LOOKUP, USER, PASSWORD, SSL_CONTEXT_SERVICE));
+        propertyDescriptors = Collections.unmodifiableList(Arrays.asList(CONNECTION_FACTORY_IMPL, CLIENT_LIB_DIR_PATH, BROKER_URI, JNDI_CF_LOOKUP, JNDI_USER, JNDI_PASSWORD, SSL_CONTEXT_SERVICE));
     }
 
     private volatile boolean configured;
@@ -267,21 +265,21 @@ public class JNDIConnectionFactoryProvider extends AbstractControllerService imp
             env.put(InitialContext.PROVIDER_URL, getContextValue(context, BROKER_URI));
             if (isSolace(context)) {
 
-                String user = getContextValue(context, USER);
+                String user = getContextValue(context, JNDI_USER);
                 if (user != null || user.length() > 0) {
                     String clnNames[] = user.split("@");
                     if (clnNames.length == 2) {
                         env.put("Solace_JMS_VPN", clnNames[1]);
                     }
                     env.put(Context.SECURITY_PRINCIPAL, clnNames[0]);
-                    String pass = getContextValue(context, PASSWORD);
+                    String pass = getContextValue(context, JNDI_PASSWORD);
                     if (pass != null && pass.length() > 0) {
                         env.put(Context.SECURITY_CREDENTIALS, pass);
                     }
                 }
             } 
             InitialContext initialContext = new InitialContext(env);
-            this.connectionFactory = (ConnectionFactory) initialContext.lookup(context.getProperty(CF_LOOKUP).evaluateAttributeExpressions().getValue());
+            this.connectionFactory = (ConnectionFactory) initialContext.lookup(context.getProperty(JNDI_CF_LOOKUP).evaluateAttributeExpressions().getValue());
         } catch (Exception e) {
             throw new IllegalStateException("Failed to load and/or instantiate class 'com.solacesystems.jndi.SolJNDIInitialContextFactory'", e);
         }
