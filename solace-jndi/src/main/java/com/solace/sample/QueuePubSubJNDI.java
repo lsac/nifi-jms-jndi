@@ -62,7 +62,7 @@ public class QueuePubSubJNDI {
         } catch (Exception e) {
         }
         env.put(SupportedProperty.SOLACE_JMS_VPN, "default");
-        env.put(Context.SECURITY_PRINCIPAL, "default");
+        env.put(Context.SECURITY_PRINCIPAL, "nifi");
         env.put(Context.SECURITY_CREDENTIALS, "");
 
         // InitialContext is used to lookup the JMS administered objects.
