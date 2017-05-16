@@ -9,7 +9,7 @@ NiFi keeps all the GUI widget configurations in a file '~/nifi-1.1.2/conf/flow.x
 
 ![Provider properties](/resources/providerProp.png)
 
-## The provider properties in the flow file are as below:
+## The Solace provider properties in the flow file are as below:
 ```xml
     <controllerService>
       <id>fa5ff488-015b-1000-5674-9ddc019790ae</id>
