@@ -86,7 +86,7 @@ public interface JMSConnectionFactoryProviderDefinition extends ControllerServic
     
     static final PropertyDescriptor JNDI_USER = new PropertyDescriptor.Builder()
             .name("User Name")
-            .description("User Name used for authentication and authorization. (i.e., clientname@solaceVpn)")
+            .description("User Name used for authentication and authorization. (i.e., Solace must have clientname@solaceVpn specified)")
             .required(false)
             .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
             .build();
