@@ -21,18 +21,13 @@ import static org.junit.Assert.assertTrue;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.ServiceLoader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.jms.ConnectionFactory;
-import javax.jms.QueueConnectionFactory;
 import javax.jms.Session;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.nifi.jms.cf.JNDIConnectionFactoryProvider;
 import org.apache.nifi.processor.Processor;
 import org.junit.Test;
 import org.springframework.jms.connection.CachingConnectionFactory;
