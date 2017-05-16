@@ -281,7 +281,8 @@ public class JNDIConnectionFactoryProvider extends AbstractControllerService imp
             } 
             InitialContext initialContext = new InitialContext(env);
             this.connectionFactory = (ConnectionFactory) initialContext.lookup(context.getProperty(JNDI_CF_LOOKUP).evaluateAttributeExpressions().getValue());
-            logger.debug("Connection factory is created");
+            if (logger.isDebugEnabled())
+                logger.debug("Connection factory is created");
         } catch (Exception e) {
             throw new IllegalStateException("Failed to load and/or instantiate class 'com.solacesystems.jndi.SolJNDIInitialContextFactory'", e);
         }

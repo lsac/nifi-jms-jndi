@@ -32,6 +32,8 @@ import javax.jms.TextMessage;
 import javax.jms.Topic;
 
 import org.apache.nifi.logging.ComponentLog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.SessionCallback;
 import org.springframework.jms.support.JmsHeaders;
@@ -41,6 +43,8 @@ import org.springframework.jms.support.JmsUtils;
  * Generic consumer of messages from JMS compliant messaging system.
  */
 final class JMSConsumer extends JMSWorker {
+    
+    private final static Logger logger = LoggerFactory.getLogger(JMSConsumer.class);
 
     /**
      * Creates an instance of this consumer
@@ -91,6 +95,8 @@ final class JMSConsumer extends JMSWorker {
                         Map<String, Object> messageHeaders = extractMessageHeaders(message);
                         Map<String, String> messageProperties = extractMessageProperties(message);
                         response = new JMSResponse(messageBody, messageHeaders, messageProperties);
+                        if (logger.isDebugEnabled())
+                            logger.debug("message received : " + message.toString());                        
                     }
                     // invoke the processor callback (regardless if it's null,
                     // so the processor can yield) as part of this inJMS call

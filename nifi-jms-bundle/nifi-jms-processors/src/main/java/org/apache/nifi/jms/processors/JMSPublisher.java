@@ -116,6 +116,8 @@ final class JMSPublisher extends JMSWorker {
                         }
                     }
                 }
+                if (logger.isDebugEnabled())
+                    logger.debug("message created" + message.toString());
                 return message;
             }
         });
