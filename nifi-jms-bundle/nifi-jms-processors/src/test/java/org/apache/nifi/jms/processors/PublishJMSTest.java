@@ -30,7 +30,6 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Queue;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.nifi.jms.cf.JNDIConnectionFactoryProviderDefinition;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -211,7 +210,7 @@ public class PublishJMSTest {
 
         PublishJMS pubProc = new PublishJMS();
         TestRunner runner = TestRunners.newTestRunner(pubProc);
-        JMSConnectionFactoryProviderDefinition cs = mock(JNDIConnectionFactoryProviderDefinition.class);
+        JMSConnectionFactoryProviderDefinition cs = mock(JMSConnectionFactoryProviderDefinition.class);
         when(cs.getIdentifier()).thenReturn("cfProvider");
         when(cs.getConnectionFactory()).thenReturn(cf);
 

@@ -22,7 +22,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.nifi.jms.cf.JMSConnectionFactoryProviderDefinition;
-import org.apache.nifi.jms.cf.JNDIConnectionFactoryProviderDefinition;
 import org.apache.nifi.logging.ComponentLog;
 import org.apache.nifi.util.MockFlowFile;
 import org.apache.nifi.util.TestRunner;
@@ -75,7 +74,7 @@ public class ConsumeJMSTest {
     }
 
     @Test
-    public void validateSuccessfulJNDIConsumeAndTransferToSuccess() {
+    public void validateSuccessfulConsumeAndTransferToSuccessOverJNDI() {
         final String destinationName = "cooQueue";
         
         try {
@@ -87,7 +86,7 @@ public class ConsumeJMSTest {
             senderAttributes.put("attribute_from_sender", "some value");
             sender.publish(destinationName, "Hey dude!".getBytes(), senderAttributes);
             TestRunner runner = TestRunners.newTestRunner(new ConsumeJMS());
-            JMSConnectionFactoryProviderDefinition cs = mock(JNDIConnectionFactoryProviderDefinition.class);
+            JMSConnectionFactoryProviderDefinition cs = mock(JMSConnectionFactoryProviderDefinition.class);
             when(cs.getIdentifier()).thenReturn("cfProvider");
             when(cs.getConnectionFactory()).thenReturn(jmsTemplate.getConnectionFactory());
             runner.addControllerService("cfProvider", cs);
