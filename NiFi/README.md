@@ -35,7 +35,7 @@ NiFi keeps all the GUI widget configurations in a file '~/nifi-1.1.2/conf/flow.x
       </property>
       <property>
         <name>User Name</name>
-        <value>default@default</value>
+        <value>nifi@default</value>
       </property>
       <property>
         <name>Password</name>
