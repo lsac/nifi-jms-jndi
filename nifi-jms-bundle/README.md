@@ -9,13 +9,17 @@ Changes are made as following:
 
 1. New code
   
-    * nifi-jms-cf-service\src\main\java\org\apache\nifi\jms\cf\JNDIConnectionFactoryProviderDefinition.java
     * nifi-jms-cf-service\src\main\java\org\apache\nifi\jms\cf\JNDIConnectionFactoryProvider.java
     * nifi-jms-cf-service\src\test\java\org\apache\nifi\jms\cf\JNDIConnectionFactoryProviderTest.java
 
 2. Modified code
 
+    * nifi-jms-cf-service\src\main\java\org\apache\nifi\jms\cf\JMSConnectionFactoryProviderDefinition.java
     * nifi-jms-cf-service\src\main\resources\META-INF\services\org.apache.nifi.controller.ControllerService
+    * nifi-jms-processors\src\test\java\org\apache\nifi\jms\processors\CommonTest.java
+    * nifi-jms-processors\src\test\java\org\apache\nifi\jms\processors\ConsumeJMSTest.java
+    * nifi-jms-processors\src\test\java\org\apache\nifi\jms\processors\JMSPublisherConsumerTest.java
+    * nifi-jms-processors\src\test\java\org\apache\nifi\jms\processors\PublishJMSTest.java
   
 ## Build procedures
 The maven build script is executed from 'nifi-jms-bundle' directory as following:
