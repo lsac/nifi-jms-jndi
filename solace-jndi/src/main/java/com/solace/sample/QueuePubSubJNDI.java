@@ -69,7 +69,6 @@ public class QueuePubSubJNDI {
         InitialContext initialContext = new InitialContext(env);
         // Lookup ConnectionFactory.
         ConnectionFactory cf = (ConnectionFactory) initialContext.lookup("/jms/cf/default");
-        //cf.setUsername("");
         // JMS Connection
         Connection connection = cf.createConnection();
 
