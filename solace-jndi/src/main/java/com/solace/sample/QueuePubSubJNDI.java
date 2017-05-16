@@ -24,8 +24,6 @@ import javax.jms.DeliveryMode;
 import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
-import javax.jms.QueueConnection;
-import javax.jms.QueueConnectionFactory;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.naming.Context;
@@ -33,6 +31,8 @@ import javax.naming.InitialContext;
 
 import com.solacesystems.jms.SupportedProperty;
 import java.util.Properties;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
@@ -68,12 +68,13 @@ public class QueuePubSubJNDI {
         // InitialContext is used to lookup the JMS administered objects.
         InitialContext initialContext = new InitialContext(env);
         // Lookup ConnectionFactory.
-        QueueConnectionFactory cf = (QueueConnectionFactory) initialContext.lookup("/jms/cf/default");
+        ConnectionFactory cf = (ConnectionFactory) initialContext.lookup("/jms/cf/default");
+        //cf.setUsername("");
         // JMS Connection
-        QueueConnection connection = cf.createQueueConnection();
+        Connection connection = cf.createConnection();
 
         // Create a non-transacted, Auto Ack session.
-        Session session = connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
         // Lookup Queue.
         Queue qPub = (Queue) initialContext.lookup("/JNDI/Q/toNifi");
