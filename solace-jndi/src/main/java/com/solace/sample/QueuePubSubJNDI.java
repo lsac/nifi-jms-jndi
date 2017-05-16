@@ -89,7 +89,6 @@ public class QueuePubSubJNDI {
 
             @Override
             public void onMessage(Message message) {
-
                 try {
                     if (message instanceof TextMessage) {
                         System.out.printf("TextMessage received: '%s'%n", ((TextMessage) message).getText());
@@ -105,10 +104,9 @@ public class QueuePubSubJNDI {
                     System.out.println("Error processing incoming message.");
                     e.printStackTrace();
                 }
-
             }
-
         });
+        
         // Do not forget to start the JMS Connection.
         connection.start();
 
