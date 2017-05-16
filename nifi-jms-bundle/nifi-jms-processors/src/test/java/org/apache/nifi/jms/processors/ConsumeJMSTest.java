@@ -18,8 +18,11 @@ package org.apache.nifi.jms.processors;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.nifi.jms.cf.JMSConnectionFactoryProviderDefinition;
+import org.apache.nifi.jms.cf.JNDIConnectionFactoryProviderDefinition;
 import org.apache.nifi.logging.ComponentLog;
 import org.apache.nifi.util.MockFlowFile;
 import org.apache.nifi.util.TestRunner;
@@ -37,7 +40,7 @@ public class ConsumeJMSTest {
 
     @Test
     public void validateSuccessfulConsumeAndTransferToSuccess() throws Exception {
-        final String  destinationName = "cooQueue";
+        final String destinationName = "cooQueue";
         JmsTemplate jmsTemplate = CommonTest.buildJmsTemplateForDestination(false);
         JMSPublisher sender = new JMSPublisher(jmsTemplate, mock(ComponentLog.class));
         final Map<String, String> senderAttributes = new HashMap<>();
@@ -69,5 +72,47 @@ public class ConsumeJMSTest {
         assertNotNull(sourceDestination);
 
         ((CachingConnectionFactory) jmsTemplate.getConnectionFactory()).destroy();
+    }
+
+    @Test
+    public void validateSuccessfulJNDIConsumeAndTransferToSuccess() {
+        final String destinationName = "cooQueue";
+        
+        try {
+            JmsTemplate jmsTemplate = CommonTest.buildJmsJndiTemplateForDestination(false);
+
+            JMSPublisher sender = new JMSPublisher(jmsTemplate, mock(ComponentLog.class));
+            final Map<String, String> senderAttributes = new HashMap<>();
+            senderAttributes.put("filename", "message.txt");
+            senderAttributes.put("attribute_from_sender", "some value");
+            sender.publish(destinationName, "Hey dude!".getBytes(), senderAttributes);
+            TestRunner runner = TestRunners.newTestRunner(new ConsumeJMS());
+            JMSConnectionFactoryProviderDefinition cs = mock(JNDIConnectionFactoryProviderDefinition.class);
+            when(cs.getIdentifier()).thenReturn("cfProvider");
+            when(cs.getConnectionFactory()).thenReturn(jmsTemplate.getConnectionFactory());
+            runner.addControllerService("cfProvider", cs);
+            runner.enableControllerService(cs);
+
+            runner.setProperty(PublishJMS.CF_SERVICE, "cfProvider");
+            runner.setProperty(ConsumeJMS.DESTINATION, destinationName);
+            runner.setProperty(ConsumeJMS.DESTINATION_TYPE, ConsumeJMS.QUEUE);
+            runner.run(1, false);
+            //
+            final MockFlowFile successFF = runner.getFlowFilesForRelationship(PublishJMS.REL_SUCCESS).get(0);
+            assertNotNull(successFF);
+            successFF.assertAttributeExists(JmsHeaders.DESTINATION);
+            successFF.assertAttributeEquals(JmsHeaders.DESTINATION, destinationName);
+            successFF.assertAttributeExists("filename");
+            successFF.assertAttributeEquals("filename", "message.txt");
+            successFF.assertAttributeExists("attribute_from_sender");
+            successFF.assertAttributeEquals("attribute_from_sender", "some value");
+            successFF.assertContentEquals("Hey dude!".getBytes());
+            String sourceDestination = successFF.getAttribute(ConsumeJMS.JMS_SOURCE_DESTINATION_NAME);
+            assertNotNull(sourceDestination);
+
+            ((CachingConnectionFactory) jmsTemplate.getConnectionFactory()).destroy();
+        } catch (Exception ex) {
+            Logger.getLogger(ConsumeJMSTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

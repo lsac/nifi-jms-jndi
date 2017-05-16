@@ -19,12 +19,20 @@ package org.apache.nifi.jms.processors;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
+import java.util.Properties;
 import java.util.ServiceLoader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.jms.ConnectionFactory;
+import javax.jms.QueueConnectionFactory;
 import javax.jms.Session;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.nifi.jms.cf.JNDIConnectionFactoryProvider;
 import org.apache.nifi.processor.Processor;
 import org.junit.Test;
 import org.springframework.jms.connection.CachingConnectionFactory;
@@ -61,4 +69,27 @@ public class CommonTest {
         jmsTemplate.setSessionAcknowledgeMode(Session.CLIENT_ACKNOWLEDGE);
         return jmsTemplate;
     }
+    static JmsTemplate buildJmsJndiTemplateForDestination(boolean pubSub) throws Exception {
+
+        ConnectionFactory connectionFactory = buildJmsJndiConnectionFactory();    
+        connectionFactory = new CachingConnectionFactory(connectionFactory);
+
+        JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
+        jmsTemplate.setPubSubDomain(pubSub);
+        jmsTemplate.setSessionAcknowledgeMode(Session.CLIENT_ACKNOWLEDGE);
+        return jmsTemplate;
+    }
+    static ConnectionFactory buildJmsJndiConnectionFactory() throws Exception {
+        Properties env =new Properties();
+        env.setProperty(Context.PROVIDER_URL, "vm://localhost?broker.persistent=false");
+        env.setProperty(Context.INITIAL_CONTEXT_FACTORY,
+                    "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
+        
+        InitialContext initialContext = new InitialContext(env);
+        // Lookup ConnectionFactory.
+        ConnectionFactory connectionFactory = (ConnectionFactory) initialContext.lookup("ConnectionFactory");  
+        return connectionFactory;
+   
+    }
+
 }
