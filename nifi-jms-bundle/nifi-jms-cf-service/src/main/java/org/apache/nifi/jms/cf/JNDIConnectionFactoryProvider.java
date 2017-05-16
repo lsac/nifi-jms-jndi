@@ -126,7 +126,8 @@ public class JNDIConnectionFactoryProvider extends AbstractControllerService imp
                 Utils.addResourcesToClasspath(context.getProperty(CLIENT_LIB_DIR_PATH).evaluateAttributeExpressions().getValue());
 
                 this.createConnectionFactoryInstance(context);
-//                this.setConnectionFactoryProperties(context);
+                if(!isSolace(context))
+                    this.setConnectionFactoryProperties(context);
             }
             this.configured = true;
         } catch (Exception e) {
