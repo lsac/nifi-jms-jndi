@@ -20,7 +20,7 @@ These links contain information related to this guide:
 * [Solace Developer Portal](http://dev.solace.com/){:target="_top"}
 * [Solace Messaging API for JMS](http://docs.solace.com/Solace-JMS-API/JMS-home.htm){:target="_top"}
 * [Solace JMS API Online Reference Documentation](http://docs.solace.com/Solace-JMS-API/jms-only-link.htm){:target="_top"}
-* [Solace Feature Guide](http://docs.solace.com/Features/Features-Intro.htm{:target="_top"}
+* [Solace Feature Guide](http://docs.solace.com/Features/Features-Intro.htm){:target="_top"}
 * [Solace Message Router Configuration](http://docs.solace.com/Router-Configuration.htm){:target="_top"}
 * [Solace Command Line Interface Reference](http://docs.solace.com/Configuring-and-Managing-Routers/Using-the-Solace-Router-CLI.htm){:target="_top"}
 * [NiFi Documentation](http://nifi.apache.org/docs.html){:target="_blank"}
