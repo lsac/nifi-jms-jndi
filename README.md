@@ -17,29 +17,29 @@ This document is divided into the following sections to cover the Solace JMS int
 
 These links contain information related to this guide:
 
-* [Solace Developer Portal](http://dev.solace.com/){:target="_top"}
-* [Solace Messaging API for JMS](http://docs.solace.com/Solace-JMS-API/JMS-home.htm){:target="_top"}
-* [Solace JMS API Online Reference Documentation](http://docs.solace.com/Solace-JMS-API/jms-only-link.htm){:target="_top"}
-* [Solace Feature Guide](http://docs.solace.com/Features/Features-Intro.htm){:target="_top"}
-* [Solace Message Router Configuration](http://docs.solace.com/Router-Configuration.htm){:target="_top"}
-* [Solace Command Line Interface Reference](http://docs.solace.com/Configuring-and-Managing-Routers/Using-the-Solace-Router-CLI.htm){:target="_top"}
-* [NiFi Documentation](http://nifi.apache.org/docs.html){:target="_blank"}
-* [NiFi Developer Guide](http://nifi.apache.org/developer-guide.html){:target="_blank"}
+* [Solace Developer Portal](http://dev.solace.com/)
+* [Solace Messaging API for JMS](http://docs.solace.com/Solace-JMS-API/JMS-home.htm)
+* [Solace JMS API Online Reference Documentation](http://docs.solace.com/Solace-JMS-API/jms-only-link.htm)
+* [Solace Feature Guide](http://docs.solace.com/Features/Features-Intro.htm)
+* [Solace Message Router Configuration](http://docs.solace.com/Router-Configuration.htm)
+* [Solace Command Line Interface Reference](http://docs.solace.com/Configuring-and-Managing-Routers/Using-the-Solace-Router-CLI.htm)
+* [NiFi Documentation](http://nifi.apache.org/docs.html)
+* [NiFi Developer Guide](http://nifi.apache.org/developer-guide.html)
 
 ## Integrating Solace with NiFi JMS Processor
 
-NiFi JMS Bundle comes with 2 processors, ConsumeJMS and PublishJMS. The 2 out-of-box processors work well with some messaging brokers, i.e. ActiveMQ and etc. However, not all messaging brokers work well with the built-in JMS processors that expect zero-argument connection factory constructors. Solace connection factory and some other JMS connection factories cannot be instantiated with zero argument. There is a current NiFi Jira on [this major bug](https://issues.apache.org/jira/browse/NIFI-2701){:target="_blank"}.
+NiFi JMS Bundle comes with 2 processors, ConsumeJMS and PublishJMS. The 2 out-of-box processors work well with some messaging brokers, i.e. ActiveMQ and etc. However, not all messaging brokers work well with the built-in JMS processors that expect zero-argument connection factory constructors. Solace connection factory and some other JMS connection factories cannot be instantiated with zero argument. There is a current NiFi Jira on [this major bug](https://issues.apache.org/jira/browse/NIFI-2701).
 
 The alternative is to use the standard JMS JNDI connection factory. Most of JMS brokers do provide JNDI connection factory support. Current NiFi JMS service has a JMS ControllerService, dropping in a new JMS JNDI ControllerService is appropriate for enabling JNDI support. 
 
-By [NiFi definition](http://nifi.apache.org/docs/nifi-docs/html/developer-guide.html#controller-services){:target="_blank"}, a ControllerService provides shared state and functionality across Processors, other ControllerServices, and ReportingTasks within a single JVM. An example use case may include loading a very large dataset into memory. By performing this work in a ControllerService, the data can be loaded once and be exposed to all Processors via this service, rather than requiring many different Processors to load the dataset themselves.
+By [NiFi definition](http://nifi.apache.org/docs/nifi-docs/html/developer-guide.html#controller-services), a ControllerService provides shared state and functionality across Processors, other ControllerServices, and ReportingTasks within a single JVM. An example use case may include loading a very large dataset into memory. By performing this work in a ControllerService, the data can be loaded once and be exposed to all Processors via this service, rather than requiring many different Processors to load the dataset themselves.
 
 This is a demostration of an approach for publishing and consuming messages from a Java Messaging Service (JMS) ControllerService in NiFi processors. 
-The general NiFi Controller Services is documented in the [NiFi Developer Guide](http://nifi.apache.org/docs/nifi-docs/html/developer-guide.html#controller-services){:target="_blank"}. The developement guide outlined in this document explains how JNDI support is added. 
+The general NiFi Controller Services is documented in the [NiFi Developer Guide](http://nifi.apache.org/docs/nifi-docs/html/developer-guide.html#controller-services). The developement guide outlined in this document explains how JNDI support is added. 
 
 This integration guide demonstrates how to build a JNDI connection provider and configure NiFi JMS processors to send and receive JMS messages using the new provider. Accomplishing this requires completion of the following steps. 
 
-* Step 1 - Obtain access to Solace message router and JMS API, see the [Solace Developer Portal](http://dev.solace.com/){:target="_top"}
+* Step 1 - Obtain access to Solace message router and JMS API, see the [Solace Developer Portal](http://dev.solace.com/)
 * Step 2 - Configuration of the Solace Message Router.
 * Step 3 - Developing a Solace JMS application to do message PubSub via JNDI
 * Step 4 - Obtain Apache NiFi
@@ -72,13 +72,13 @@ The following Solace Message Router resources are required.
 
 The Solace messaging router can be obtained one of 2 ways.     
 1.	If you are in an organization that is an existing Solace customer, it is likely your organization already has Solace Message Routers and corporate policies about their use.  You will have to contact your middleware operational team in regards to access to a Solace Message Router.
-2.	If you are new to Solace or your company does not have development message routers, you can obtain a trail Solace Virtual Message Router (VMR) from the [Solace Developer Portal Downloads](http://dev.solace.com/downloads/){:target="_top"}. For help getting started with your Solace VMR you can refer to [Solace VMR Getting Started Guides](http://dev.solace.com/get-started/send-receive-messages/){:target="_top"}.
+2.	If you are new to Solace or your company does not have development message routers, you can obtain a trail Solace Virtual Message Router (VMR) from the [Solace Developer Portal Downloads](http://dev.solace.com/downloads/). For help getting started with your Solace VMR you can refer to [Solace VMR Getting Started Guides](http://dev.solace.com/get-started/send-receive-messages/).
 
-The Solace JMS jars are required.  They can be obtained on [Solace Developer Portal Downloads](http://dev.solace.com/downloads/){:target="_top"} or from [Maven Central](https://mvnrepository.com/artifact/com.solacesystems){:target="_blank"}.
+The Solace JMS jars are required.  They can be obtained on [Solace Developer Portal Downloads](http://dev.solace.com/downloads/) or from [Maven Central](https://mvnrepository.com/artifact/com.solacesystems).
 
 ##### Solace JMS Dependencies
 
-The easiest way to integrate Solace and NiFi is using the client libraries available via public [Maven Repositories](https://mvnrepository.com/artifact/com.solacesystems){:target="_blank"}. You can downloaded the libraries into a directory and reference them directly, the following resources are all required:
+The easiest way to integrate Solace and NiFi is using the client libraries available via public [Maven Repositories](https://mvnrepository.com/artifact/com.solacesystems). You can downloaded the libraries into a directory and reference them directly, the following resources are all required:
 
 |Resource|Value|Description|
 |---|---|---|
@@ -99,7 +99,7 @@ The Solace Message Router needs to be configured with the following configuratio
 * Guaranteed messaging endpoints for receiving messages.
 * Appropriate JNDI mappings enabling JMS clients to connect to the Solace Message Router configuration.
 
-For reference, the CLI commands in the following sections are from SolOS version 7.2 but will generally be forward compatible. For more details related to Solace Message Router CLI see [Solace Command Line Interface Reference](http://docs.solace.com/Configuring-and-Managing-Routers/Using-the-Solace-Router-CLI.htm){:target="_top"}. Wherever possible, default values will be used to minimize the required configuration. The CLI commands listed also assume that the CLI user has a Global Access Level set to Admin. For details on CLI access levels please see [Solace Feature Guide](http://docs.solace.com/Features/Features-Intro.htm){:target="_top"} section “User Authentication and Authorization”.
+For reference, the CLI commands in the following sections are from SolOS version 7.2 but will generally be forward compatible. For more details related to Solace Message Router CLI see [Solace Command Line Interface Reference](http://docs.solace.com/Configuring-and-Managing-Routers/Using-the-Solace-Router-CLI.htm). Wherever possible, default values will be used to minimize the required configuration. The CLI commands listed also assume that the CLI user has a Global Access Level set to Admin. For details on CLI access levels please see [Solace Feature Guide](http://docs.solace.com/Features/Features-Intro.htm) section “User Authentication and Authorization”.
 
 Also note that this configuration can also be easily performed using SolAdmin, Solace’s GUI management tool. This is in fact the recommended approach for configuring a Solace Message Router. This document uses CLI as the reference to remain concise.
 
@@ -287,7 +287,7 @@ They are configured as follows:
 
 ###	Step 4 – Obtain Apache NiFi
 
-The Apache NiFi can be obtained from the [Apache NiFi Downloads](http://nifi.apache.org/download.html){:target="_blank"}. For help getting started with your Apache NiFi you can refer to [Getting Started in NiFi Documentation](http://nifi.apache.org/docs/nifi-docs/html/getting-started.html){:target="_blank"}.
+The Apache NiFi can be obtained from the [Apache NiFi Downloads](http://nifi.apache.org/download.html). For help getting started with your Apache NiFi you can refer to [Getting Started in NiFi Documentation](http://nifi.apache.org/docs/nifi-docs/html/getting-started.html).
 
 ### Step 5 – Developing a new NiFi JMS ControllerService to support JNDI
 
@@ -595,7 +595,7 @@ The received messages are from NiFi - hence some of the JMS properties are fille
 
 ## Working with Solace High Availability (HA)
 
-The [Solace JMS API Online Reference Documentation](http://docs.solace.com/API-Developer-Online-Ref-Documentation/jms/index.html){:target="_top"} section “Establishing Connection and Creating Sessions” provides details on how to enable the Solace JMS connection to automatically reconnect to the standby message router in the case of a HA failover of a Solace Message Router. By default Solace JMS connections will reconnect to the standby message router in the case of an HA failover.
+The [Solace JMS API Online Reference Documentation](http://docs.solace.com/API-Developer-Online-Ref-Documentation/jms/index.html) section “Establishing Connection and Creating Sessions” provides details on how to enable the Solace JMS connection to automatically reconnect to the standby message router in the case of a HA failover of a Solace Message Router. By default Solace JMS connections will reconnect to the standby message router in the case of an HA failover.
 
 In general the Solace documentation contains the following note regarding reconnection:
 
@@ -673,4 +673,3 @@ NiFi '~\NiFi\conf\logback.xml' has configurable setting for tracing and debuggin
     <logger name="org.apache.nifi.processors.standard.LogAttribute" level="DEBUG"/>
     <logger name="org.apache.nifi.controller.repository.StandardProcessSession" level="WARN" />
 ```
-
