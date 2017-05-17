@@ -95,7 +95,7 @@ public class QueuePubSubJNDI {
                     } else {
                         System.out.println("Message received.");
                     }
-                    System.out.printf("Message Dump:%n%s%n", SolJmsUtility.dumpMessage(message));
+                    System.out.printf("Message Dump: %n%s%n", SolJmsUtility.dumpMessage(message));
 
                     long tmStart = message.getLongProperty(ORIGINATION_TIME);
                     System.out.printf("appID = %d, latency = %d ms %n", message.getLongProperty("appID"), (System.currentTimeMillis() - tmStart));
@@ -117,7 +117,7 @@ public class QueuePubSubJNDI {
         MessageProducer producer = session.createProducer(qPub);
 
         // Create a text message.
-        TextMessage message = session.createTextMessage("Hello world Queues!");
+        TextMessage message = session.createTextMessage("");
         message.setBooleanProperty(SupportedProperty.SOLACE_JMS_PROP_DELIVER_TO_ONE, false);
 
         System.out.printf("Connected. About to send message '%s' to queue '%s'...%n", message.getText(),
@@ -125,10 +125,12 @@ public class QueuePubSubJNDI {
 
         for (int i = 1; i <= count; i++) {
             long t = System.currentTimeMillis();
+            message.setText("Hello world Queues!");
             message.setLongProperty("appID", i);
             message.setLongProperty(ORIGINATION_TIME, t);
+            System.out.printf("Original message being Sent : %nText:\t%s%n%s%n", message.getText(),SolJmsUtility.dumpMessage(message));
             producer.send(qPub, message, DeliveryMode.PERSISTENT, Message.DEFAULT_PRIORITY, Message.DEFAULT_TIME_TO_LIVE);
-            System.out.printf("Message %d is sent at %d %n", i, t);
+            System.out.printf("Original message %d is sent at %d %n", i, t);
             try {
                 Thread.sleep(100);
             } catch (Exception ex) {
