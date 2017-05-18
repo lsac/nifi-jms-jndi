@@ -304,8 +304,8 @@ Changes are made as following:
 
         URI Scheme is the uniform resource identifier (URI) scheme used for the JNDI lookup. The valid values are:
 
-            * smf—use plain-text over SMF for communications between the application and the host. SMF is the default.
-            * smfs—use TLS/ SSL protocols over SMF for secure communications between the application and the host
+        * ***smf*** — use plain-text over SMF for communications between the application and the host. SMF is the default.
+        * ***smfs*** — use TLS/ SSL protocols over SMF for secure communications between the application and the host
             
         ***username*** is the user name that is required to authenticate a client connecting to the host. A client username can be used by a single or by multiple JMS clients.
 
@@ -317,9 +317,9 @@ Changes are made as following:
 
         **Note**:  The provided URL parameters are used for both a JNDI connection and a JMS data connection. This is useful when both the JNDI and JMS data connections are for a Solace router that provides JNDI and JMS service. However, when the JNDI store to be used is hosted on an LDAP server, and the Solace router is only used for the JMS broker, the specified URL parameters, which are used for the JNDI connection, can be overridden by parameters specified in the Connection Factory when creating a JMS connection.
 
-            * Type: String
-            * Format: smf://username:password@ipaddress:port
-            * Default: None
+        * Type: String
+        * Format: smf://username:password@ipaddress:port
+        * Default: None
       
       * nifi-jms-cf-service\src\main\java\org\apache\nifi\jms\cf\JNDIConnectionFactoryProvider.java
       
@@ -331,21 +331,6 @@ Changes are made as following:
                 try {
                     env.put(InitialContext.INITIAL_CONTEXT_FACTORY, connectionFactoryImplName);
                     env.put(InitialContext.PROVIDER_URL, getContextValue(context, BROKER_URI));
-                    if (isSolace(context)) {
-
-                        String user = getContextValue(context, JNDI_USER);
-                        if (user != null || user.length() > 0) {
-                            String clnNames[] = user.split("@");
-                            if (clnNames.length == 2) {
-                                env.put("Solace_JMS_VPN", clnNames[1]);
-                            }
-                            env.put(Context.SECURITY_PRINCIPAL, clnNames[0]);
-                            String pass = getContextValue(context, JNDI_PASSWORD);
-                            if (pass != null && pass.length() > 0) {
-                                env.put(Context.SECURITY_CREDENTIALS, pass);
-                            }
-                        }
-                    } 
                     InitialContext initialContext = new InitialContext(env);
                     this.connectionFactory = (ConnectionFactory) initialContext.lookup(context.getProperty(JNDI_CF_LOOKUP).evaluateAttributeExpressions().getValue());
                 } catch (Exception e) {
