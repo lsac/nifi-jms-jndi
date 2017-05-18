@@ -50,20 +50,6 @@ public class QueuePubSubJNDI {
         Properties env = new Properties();
         env.put(InitialContext.INITIAL_CONTEXT_FACTORY, "com.solacesystems.jndi.SolJNDIInitialContextFactory");
         env.put(InitialContext.PROVIDER_URL, (String) args[0]);
-        try {
-            int i = 0;
-            if (args.length > 1) {
-                i = Integer.parseInt(args[1]);
-            }
-            if (i > 0) {
-                count = i;
-            }
-
-        } catch (Exception e) {
-        }
-        env.put(SupportedProperty.SOLACE_JMS_VPN, "default");
-        env.put(Context.SECURITY_PRINCIPAL, "nifi");
-        env.put(Context.SECURITY_CREDENTIALS, "");
 
         // InitialContext is used to lookup the JMS administered objects.
         InitialContext initialContext = new InitialContext(env);
