@@ -177,17 +177,22 @@ public class JMSConnectionFactoryProvider extends AbstractControllerService impl
                 this.setProperty(propertyName, entry.getValue());
             } else {
                 if (propertyName.equals(BROKER)) {
-                    if (context.getProperty(CONNECTION_FACTORY_IMPL).evaluateAttributeExpressions().getValue().startsWith("org.apache.activemq")) {
+                    String impl = context.getProperty(CONNECTION_FACTORY_IMPL).evaluateAttributeExpressions().getValue();
+                    boolean isSolace  = "com.solacesystems.jms.SolConnectionFactoryImpl".equals(impl);
+                    if (impl.startsWith("org.apache.activemq")) {
                         this.setProperty("brokerURL", entry.getValue());
                     } else {
-                        String[] hostPort = entry.getValue().split(":");
-                        if (hostPort.length == 2) {
-                            this.setProperty("hostName", hostPort[0]);
-                            this.setProperty("port", hostPort[1]);
-                        } else if (hostPort.length != 2) {
-                            this.setProperty("serverUrl", entry.getValue()); // for tibco
-                        } else {
-                            throw new IllegalArgumentException("Failed to parse broker url: " + entry.getValue());
+                        String val = entry.getValue();
+                        if(val != null) {
+                            String[] hostPort = val.split(":");
+                            if (hostPort.length == 2) {
+                                this.setProperty(isSolace? "Host" :"hostName", hostPort[0]);
+                                this.setProperty("port", hostPort[1]);
+                            } else if (hostPort.length != 2) {
+                                this.setProperty(isSolace? "Host" : "serverUrl", val); // for tibco
+                            } else {
+                                throw new IllegalArgumentException("Failed to parse broker url: " + entry.getValue());
+                            }
                         }
                     }
                     SSLContextService sc = context.getProperty(SSL_CONTEXT_SERVICE).asControllerService(SSLContextService.class);
